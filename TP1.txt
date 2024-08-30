@@ -1,0 +1,11 @@
+Passos para fazer o TP 1:
+
+1.criar um classe para representar os dados
+2.transformar o arquivo de texto em arquivo binario
+3.implementar o cread
+4.implementar o update
+5.implementar o delate
+6.implementar a ordenação
+
+
+quantidade de registros :36385
