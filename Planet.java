@@ -1,9 +1,11 @@
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 public class Planet {
     private int id;
-    private long dataRelaseSecond;
+    private long dateRelaseSecond;
     private String name;//string de tamanho variavel
     private String host;//string de tamanho fixo
     private int numStars;
@@ -20,7 +22,7 @@ public class Planet {
             String discoveryMethod, int discoveryYear, String discoveryFacility, boolean controv, long mass,
             double starTemperature, String metalRatio) {
         this.id = id;
-        this.dataRelaseSecond = dataRelase;
+        this.dateRelaseSecond = dataRelase;
         this.name = name;
         this.host = host;
         this.numStars = numStars;
@@ -38,7 +40,7 @@ public class Planet {
     //construtor com parametro
     public Planet() {
         this.id = -1;
-        this.dataRelaseSecond = -1;
+        this.dateRelaseSecond = -1;
         this.name = null;
         this.host = null;
         this.numStars = -1;
@@ -66,61 +68,58 @@ public class Planet {
      public byte[] toByteArray()throws IOException{
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
-        byte[] by;
-        int tamBytes;
-        dos.writeChar('+');//subtrair 2 bytes na main
+
+        dos.writeChar('+');//lapide - subtrair 2 bytes na main 
         dos.writeInt(id);
-        dos.writeLong(dataRelaseSecond);
-
-        by = name.getBytes();
-        tamBytes = by.length;
-        //escrevendo o tamanho da string
-        dos.writeInt(tamBytes);
+        dos.writeLong(dateRelaseSecond);
         dos.writeUTF(name);
-
-        by = host.getBytes();
-        tamBytes = by.length;
-        //escrevendo o tamanho da string
-        dos.writeInt(tamBytes);
         dos.writeUTF(host);
-
         dos.writeInt(numStars);
         dos.writeInt(numPlanets);
-
-        by = discoveryMethod.getBytes();
-        tamBytes = by.length;
-        //escrevendo o tamanho da string
-        dos.writeInt(tamBytes);
         dos.writeUTF(discoveryMethod);
-
         dos.writeInt(discoveryYear);
-
-        by = discoveryFacility.getBytes();
-        tamBytes = by.length;
-        //escrevendo o tamanho da string
-        dos.writeInt(tamBytes);
         dos.writeUTF(discoveryFacility);
-
         dos.writeBoolean(controv);
         dos.writeLong(mass);
         dos.writeDouble(starTemperature);
 
         String s = catString();
-        by = s.getBytes();
-        tamBytes = by.length;
-        //escrevendo o tamanho da string
-        dos.writeInt(tamBytes);
         dos.writeUTF(s);
         return baos.toByteArray();
-
      }
+
+    public void fromByteArray(byte[] ba) throws IOException{
+        ByteArrayInputStream bais = new ByteArrayInputStream(ba);
+        DataInputStream dis = new DataInputStream(bais);
+        
+
+        this.id = dis.readInt();
+        this.dateRelaseSecond = dis.readLong();
+        this.name = dis.readUTF();
+        this.host = dis.readUTF();
+        this.numStars = dis.readInt();
+        this.numPlanets = dis.readInt();
+        this.discoveryMethod = dis.readUTF();
+        this.discoveryYear = dis.readInt();
+        this.discoveryFacility = dis.readUTF();
+        this.controv = dis.readBoolean();
+        this.mass = dis.readLong();
+        this.starTemperature = dis.readDouble();
+    }
+
+    public String toString(){
+        return "\nID: " + id + "\nDate: " + dateRelaseSecond + "\nName: " + name + "\nHost: " + host + 
+        "\nNumber of Stars: " + numStars + "\nNumber of Planets: " + numPlanets + "\nDiscovery Method: " + discoveryMethod + 
+        "\nDiscovery Year: " + discoveryYear + "\nDiscovery Facility: " + discoveryFacility + "\nControversial Flag: " + controv + 
+        "\nStellar Mass: " + mass + "\nStellar Temperature: " + starTemperature;
+    }
 
     public void setId(int id) {
         this.id = id;
     }
 
     public void setDataRelase(long dataRelase) {
-        this.dataRelaseSecond = dataRelase;
+        this.dateRelaseSecond = dataRelase;
     }
 
     public void setName(String name) {
@@ -172,7 +171,7 @@ public class Planet {
     }
 
     public long getDataRelase() {
-        return dataRelaseSecond;
+        return dateRelaseSecond;
     }
 
     public String getName() {
