@@ -15,15 +15,15 @@ public class Main {
     return secondsSinceEpoch*1000;
     }
     public static void main(String[] args){
-        Planetas pla = new Planetas(2, dateToSeconds("2014-05-14"), "11 Com b", "11 Com",
+        Planet pla = new Planet(2, dateToSeconds("2014-05-14"), "11 Com b", "11 Com",
          2, 1, "Radial Velocity", 2007, "Xinglong Station", false, 47670000, 4742.00, "[Fe/H]");
         
          FileOutputStream arq;
          DataOutputStream dos;
+         byte[] ba;
 
          try{
-            byte[] ba;
-            arq = new FileOutputStream("dados/planetas.db");
+            arq = new FileOutputStream("dados/planets.db");
             ba = pla.toByteArray();
             dos = new DataOutputStream(arq);
 

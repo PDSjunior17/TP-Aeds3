@@ -1,54 +1,54 @@
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-public class Planetas {
+public class Planet {
     private int id;
     private long dataRelaseSecond;
     private String name;//string de tamanho variavel
-    private String houst;//string de tamanho fixo
+    private String host;//string de tamanho fixo
     private int numStars;
     private int numPlanets;
     private String discoveryMethod;//string de tamanho fixo
     private int discoveryYear;
     private String discoveryFacility;//string de tamanho variavel
     private boolean controv;
-    private long  massa;
-    private double temperatureStar;//usar o numero -1 para representar que não tem o valor da temperatura
+    private long  mass;
+    private double starTemperature;//usar o numero -1 para representar que não tem o valor da temperatura
     private String[] metalRatio;//lista de valores
 
-    public Planetas(int id,long dataRelase, String name, String houst, int numStars, int numPlanets,
-            String discoveryMethod, int discoveryYear, String discoveryFacility, boolean controv, long massa,
-            double temperatureStar, String metalRatio) {
+    public Planet(int id,long dataRelase, String name, String host, int numStars, int numPlanets,
+            String discoveryMethod, int discoveryYear, String discoveryFacility, boolean controv, long mass,
+            double starTemperature, String metalRatio) {
         this.id = id;
         this.dataRelaseSecond = dataRelase;
         this.name = name;
-        this.houst = houst;
+        this.host = host;
         this.numStars = numStars;
         this.numPlanets = numPlanets;
         this.discoveryMethod = discoveryMethod;
         this.discoveryYear = discoveryYear;
         this.discoveryFacility = discoveryFacility;
         this.controv = controv;
-        this.massa = massa;
-        this.temperatureStar = temperatureStar;
+        this.mass = mass;
+        this.starTemperature = starTemperature;
         metalRatio = metalRatio.replaceAll("[\\[\\]]", "");
         this.metalRatio = metalRatio.split("/");
     }
 
     //construtor com parametro
-    public Planetas() {
+    public Planet() {
         this.id = -1;
         this.dataRelaseSecond = -1;
         this.name = null;
-        this.houst = null;
+        this.host = null;
         this.numStars = -1;
         this.numPlanets = -1;
         this.discoveryMethod = null;
         this.discoveryYear = -1;
         this.discoveryFacility = null;
         this.controv = false;
-        this.massa = -1;
-        this.temperatureStar = -1;
+        this.mass = -1;
+        this.starTemperature = -1;
         this.metalRatio = null;
     }
 
@@ -62,7 +62,7 @@ public class Planetas {
         return tmp;
     }
 
-    //metodo para transformar o objetio em uma sequencia de bytes
+    //Método para transformar o objeto em uma sequencia de bytes
      public byte[] toByteArray()throws IOException{
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
@@ -78,11 +78,11 @@ public class Planetas {
         dos.writeInt(tamBytes);
         dos.writeUTF(name);
 
-        by = houst.getBytes();
+        by = host.getBytes();
         tamBytes = by.length;
         //escrevendo o tamanho da string
         dos.writeInt(tamBytes);
-        dos.writeUTF(houst);
+        dos.writeUTF(host);
 
         dos.writeInt(numStars);
         dos.writeInt(numPlanets);
@@ -102,8 +102,8 @@ public class Planetas {
         dos.writeUTF(discoveryFacility);
 
         dos.writeBoolean(controv);
-        dos.writeLong(massa);
-        dos.writeDouble(temperatureStar);
+        dos.writeLong(mass);
+        dos.writeDouble(starTemperature);
 
         String s = catString();
         by = s.getBytes();
@@ -127,8 +127,8 @@ public class Planetas {
         this.name = name;
     }
 
-    public void setHoust(String houst) {
-        this.houst = houst;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public void setNumStars(int numStars) {
@@ -155,12 +155,12 @@ public class Planetas {
         this.controv = controv;
     }
 
-    public void setMassa(long massa) {
-        this.massa = massa;
+    public void setMass(long mass) {
+        this.mass = mass;
     }
 
-    public void setTemperatureStar(double temperatureStar) {
-        this.temperatureStar = temperatureStar;
+    public void setstarTemperature(double starTemperature) {
+        this.starTemperature = starTemperature;
     }
 
     public void setMetalRatio(String[] metalRatio) {
@@ -179,8 +179,8 @@ public class Planetas {
         return name;
     }
 
-    public String getHoust() {
-        return houst;
+    public String getHost() {
+        return host;
     }
 
     public int getNumStars() {
@@ -207,26 +207,15 @@ public class Planetas {
         return controv;
     }
 
-    public long getMassa() {
-        return massa;
+    public long getMass() {
+        return mass;
     }
 
-    public double getTemperatureStar() {
-        return temperatureStar;
+    public double getstarTemperature() {
+        return starTemperature;
     }
 
     public String[] getMetalRatio() {
         return metalRatio;
     }
-
-    
-
-    
-
-    
-
-    
-    
-
-
 }
