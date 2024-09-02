@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 
-public class Main2 {
+public class Main {
     public static long dateToSeconds(String date) {
     LocalDate localDate = LocalDate.parse(date);
     
