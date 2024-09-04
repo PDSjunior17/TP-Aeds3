@@ -7,10 +7,10 @@ public class Planet {
     private int id;
     private long dateRelaseSecond;
     private String name;//string de tamanho variavel
-    private String host;//string de tamanho fixo
+    private String host;//string de tamanho fixo, colocar um teste de avaliação
     private int numStars;
     private int numPlanets;
-    private String discoveryMethod;//string de tamanho fixo
+    private String discoveryMethod;//string de tamanho fixo, colocar um teste de avaliação
     private int discoveryYear;
     private String discoveryFacility;//string de tamanho variavel
     private boolean controv;
@@ -58,7 +58,8 @@ public class Planet {
     private String catString(){
         int tam = metalRatio.length;
         String tmp = "";
-        for(int i = 0;i<tam;i++){
+        tmp += metalRatio[0];
+        for(int i = 1;i<tam;i++){
             tmp = tmp +";" + metalRatio[i];
         }
         return tmp;
@@ -69,7 +70,8 @@ public class Planet {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
-        dos.writeChar('+');//lapide - subtrair 2 bytes na main 
+        //lapide marcada !
+        dos.writeChar('+');//lapide nao marcada - subtrair 2 bytes na main 
         dos.writeInt(id);
         dos.writeLong(dateRelaseSecond);
         dos.writeUTF(name);
