@@ -18,11 +18,10 @@ public class Planet {
     private double starTemperature;//usar o numero -1 para representar que não tem o valor da temperatura
     private String[] metalRatio;//lista de valores
 
-    public Planet(int id,long dataRelase, String name, String host, int numStars, int numPlanets,
+    public Planet(int id, String name, String host, int numStars, int numPlanets,
             String discoveryMethod, int discoveryYear, String discoveryFacility, boolean controv, long mass,
-            double starTemperature, String metalRatio) {
+            double starTemperature, String metalRatio,long dataRelase) {
         this.id = id;
-        this.dateRelaseSecond = dataRelase;
         this.name = name;
         this.host = host;
         this.numStars = numStars;
@@ -33,8 +32,15 @@ public class Planet {
         this.controv = controv;
         this.mass = mass;
         this.starTemperature = starTemperature;
-        metalRatio = metalRatio.replaceAll("[\\[\\]]", "");
-        this.metalRatio = metalRatio.split("/");
+        //tratando caso de nao haver informações
+        String[] tmp = {"V"};
+        if(metalRatio == null){this.metalRatio = tmp;}
+        else{
+            metalRatio = metalRatio.replaceAll("[\\[\\]]", "");
+            this.metalRatio = metalRatio.split("/");
+        }
+        
+        this.dateRelaseSecond = dataRelase;
     }
 
     //construtor com parametro
@@ -56,6 +62,7 @@ public class Planet {
 
 
     private String catString(){
+        if(metalRatio[0].compareTo("V") == 0){return "*";}
         int tam = metalRatio.length;
         String tmp = "";
         tmp += metalRatio[0];
