@@ -144,10 +144,22 @@ public class Planet {
     }
 
     public String toString(){
-        return "\nID: " + id + "\nDate: " + dateRelaseSecond + "\nName: " + name + "\nHost: " + host + 
+        return "\nID: " + id + "\nDate: " + secondsToDate(dateRelaseSecond) + "\nName: " + name + "\nHost: " + host + 
         "\nNumber of Stars: " + numStars + "\nNumber of Planets: " + numPlanets + "\nDiscovery Method: " + discoveryMethod + 
         "\nDiscovery Year: " + discoveryYear + "\nDiscovery Facility: " + discoveryFacility + "\nControversial Flag: " + controv + 
         "\nStellar Mass: " + mass + "\nStellar Temperature: " + starTemperature;
+    }
+
+    public static String secondsToDate(long dateReleaseSeconds) {
+        if (dateReleaseSeconds == 0L || dateReleaseSeconds == -1L) {
+            return "Não Cadastrado."; 
+        }
+
+        Instant instant = Instant.ofEpochMilli(dateReleaseSeconds);
+
+        LocalDate localDate = instant.atOffset(ZoneOffset.UTC).toLocalDate();
+
+        return localDate.toString();
     }
 
     public static long dateToSeconds(String date) {

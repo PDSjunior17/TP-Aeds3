@@ -2,25 +2,67 @@ import java.util.Scanner;
 
 public class Main {
 
-
    public static void main(String[] args){
-      Scanner entrada = new Scanner(System.in);
+      Scanner scanner = new Scanner(System.in);
       CRUD crud = new CRUD();
-      Planet pla = new Planet(2,  "11 Com b", "11 Com",
-         2, 1, "Radial Velocity", 2007, "Xinglong Station", false, 47670000, 4742.00, "[Fe/H]",
-         "2014-05-14");
+      boolean running = true;
       
       try{
-         // crud.create(pla);
-         // pla = crud.read(1);
-         // System.out.println(pla);
+         while (running) {
+            // Exibe o menu
+            System.out.println("Menu:");
+            System.out.println("1. Criar");
+            System.out.println("2. Ler");
+            System.out.println("3. Atualizar");
+            System.out.println("4. Deletar");
+            System.out.println("5. Carregar");
+            System.out.println("6. Ordenar");
+            System.out.println("7. Sair");
 
-         // crud.update(entrada);
+            // Obtém a escolha do usuário
+            System.out.print("Escolha uma opção: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-         pla = crud.read(1);
-         System.out.println(pla);
+            // Executa o método apropriado com base na escolha do usuário
+            switch (choice) {
+                case 1:
+                  crud.create(scanner);
+                  break;
+                case 2:
+                  Planet tmp = new Planet();
+                  System.out.print("Insira o ID do planeta desejado: ");
+                  tmp = crud.read(scanner.nextInt());
+                  System.out.println(tmp);
+                  scanner.nextLine();
+                  break;
+                  case 3:
+                  crud.update(scanner);
+                  break;
+                  case 4:
+                  System.out.print("Insira o ID do planeta desejado: ");
+                  tmp = crud.delete(scanner.nextInt());
+                  scanner.nextLine();
+                  break;
+                case 5:
+                  crud.load();
+                  break;
+                case 6:
+                  //ordenar
+                  break;
+                case 7:
+                  running = false;
+                  System.out.println("Encerrando o programa...");
+                  break;
+                default:
+                  System.out.println("Opção inválida. Por favor, escolha entre 1 e 6.");
+                  break;
+            }
+        }
       }catch(Exception e){
          e.printStackTrace();
       }
+
+      scanner.close();
    }
 }

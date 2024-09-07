@@ -25,7 +25,60 @@ public class CRUD {//modificar linha 966 , 4953 a 4957, 4992, 4991 a 4996, 36162
     }
 
     //Método que cria um novo registro no arquivo binário
-    public void create(Planet planet)throws Exception{
+    public void create(Scanner entrada) throws Exception {
+        Planet tmp = new Planet();
+        tmp.setId(0);
+        
+        System.out.print("\nInserir nome: ");
+        tmp.setName(entrada.nextLine());
+        
+        System.out.print("\nInserir data(yyyy-mm-dd): ");
+        tmp.setDataRelase(entrada.nextLine());
+        
+        System.out.print("\nInserir estrela hospedeira: ");
+        tmp.setHost(entrada.nextLine());
+        
+        System.out.print("\nInserir número de estrelas: ");
+        tmp.setNumStars(entrada.nextInt());
+        entrada.nextLine();
+        
+        System.out.print("\nInserir número de planetas: ");
+        tmp.setNumPlanets(entrada.nextInt());
+        entrada.nextLine();
+        
+        System.out.print("\nInserir método de descoberta: ");
+        tmp.setDiscoveryMethod(entrada.nextLine());
+        
+        System.out.print("\nInserir ano de descoberta: ");
+        tmp.setDiscoveryYear(entrada.nextInt());
+        entrada.nextLine();
+        
+        System.out.print("\nInserir local de descoberta: ");
+        tmp.setDiscoveryFacility(entrada.nextLine());
+        
+        System.out.print("\nInserir flag de controvérsia: ");
+        tmp.setControv(entrada.nextBoolean());
+        entrada.nextLine();
+        
+        System.out.print("\nInserir massa estelar: ");
+        tmp.setMass(entrada.nextLong());
+        entrada.nextLine();
+        
+        System.out.print("\nInserir temperatura estelar: ");
+        tmp.setstarTemperature(entrada.nextDouble());
+        entrada.nextLine();
+        
+        System.out.print("\nInsira as duas próximas linhas para a proporção metálica: ");
+        String[] metalRatioLines = new String[2];
+        metalRatioLines[0] = entrada.nextLine();
+        metalRatioLines[1] = entrada.nextLine();
+        
+        tmp.setMetalRatio(metalRatioLines);
+    
+        create(tmp);
+    }
+    
+    private void create(Planet planet)throws Exception{
         File file = new File(FILE_NAME);
         boolean exists = file.exists();
         
@@ -125,7 +178,7 @@ public class CRUD {//modificar linha 966 , 4953 a 4957, 4992, 4991 a 4996, 36162
         entrada.nextLine();
         System.out.print("\nNovo nome: ");
         updatedPlanet.setName(entrada.nextLine());
-        System.out.print("\nNova data: ");
+        System.out.print("\nNova data(yyyy-mm-dd): ");
         updatedPlanet.setDataRelase(entrada.nextLine());
         System.out.print("\nNova estrela hospedeira: ");
         updatedPlanet.setHost(entrada.nextLine());
@@ -158,13 +211,11 @@ public class CRUD {//modificar linha 966 , 4953 a 4957, 4992, 4991 a 4996, 36162
         metalRatioLines[1] = entrada.nextLine();
     
         updatedPlanet.setMetalRatio(metalRatioLines);
-        System.out.println("monto certim o planeta");
 
         update(updatedPlanet);
     }
 
-    public void update(Planet updatedPlanet) throws Exception {
-        System.out.println(updatedPlanet);
+    private void update(Planet updatedPlanet) throws Exception {
         RandomAccessFile raf = new RandomAccessFile(FILE_NAME, "rw");
         int lastId = raf.readInt();  //Lê o último ID
     
