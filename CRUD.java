@@ -1,21 +1,12 @@
-import java.io.File;
 import java.util.Scanner;
-import java.io.FileOutputStream;
-import java.io.DataOutputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.io.InputStreamReader;
 
 public class CRUD {//modificar linha 966 , 4953 a 4957, 4992, 4991 a 4996, 36162 do dataset
     private static String FILE_NAME = "data/planets.db";
@@ -127,8 +118,95 @@ public class CRUD {//modificar linha 966 , 4953 a 4957, 4992, 4991 a 4996, 36162
     }
     
     //Método que atualiza as informações de um registro no arquivo binário
-    public void update(Scanner entrada){
-        
+    public void update(Scanner entrada)throws Exception{
+        Planet updatedPlanet = new Planet();
+        System.out.print("\nInsira o ID do planeta a ser atualizado: ");
+        updatedPlanet.setId(entrada.nextInt());
+        entrada.nextLine();
+        System.out.print("\nNovo nome: ");
+        updatedPlanet.setName(entrada.nextLine());
+        System.out.print("\nNova data: ");
+        updatedPlanet.setDataRelase(entrada.nextLine());
+        System.out.print("\nNova estrela hospedeira: ");
+        updatedPlanet.setHost(entrada.nextLine());
+        System.out.print("\nNovo número de estrelas: ");
+        updatedPlanet.setNumStars(entrada.nextInt());
+        entrada.nextLine();
+        System.out.print("\nNovo número de planetas: ");
+        updatedPlanet.setNumPlanets(entrada.nextInt());
+        entrada.nextLine();
+        System.out.print("\nNovo método de descoberta: ");
+        updatedPlanet.setDiscoveryMethod(entrada.nextLine());
+        System.out.print("\nNovo de ano de descoberta: ");
+        updatedPlanet.setDiscoveryYear(entrada.nextInt());
+        entrada.nextLine();
+        System.out.print("\nNovo local de descoberta: ");
+        updatedPlanet.setDiscoveryFacility(entrada.nextLine());
+        System.out.print("\nNova flag de controvérsia: ");
+        updatedPlanet.setControv(entrada.nextBoolean());
+        entrada.nextLine();
+        System.out.print("\nNova massa estelar: ");
+        updatedPlanet.setMass(entrada.nextLong());
+        entrada.nextLine();
+        System.out.print("\nNova temperatura estelar: ");
+        updatedPlanet.setstarTemperature(entrada.nextDouble());
+        entrada.nextLine();
+
+        System.out.print("\nInsira as duas próximas linhas para a proporção metálica: ");
+        String[] metalRatioLines = new String[2];
+        metalRatioLines[0] = entrada.nextLine();
+        metalRatioLines[1] = entrada.nextLine();
+    
+        updatedPlanet.setMetalRatio(metalRatioLines);
+        System.out.println("monto certim o planeta");
+
+        update(updatedPlanet);
+    }
+
+    public void update(Planet updatedPlanet) throws Exception {
+        System.out.println(updatedPlanet);
+        RandomAccessFile raf = new RandomAccessFile(FILE_NAME, "rw");
+        int lastId = raf.readInt();  //Lê o último ID
+    
+        // Se o ID de updatedPlanet for maior que o último ID, ele não existe
+        if (updatedPlanet.getId() > lastId) {
+            raf.close();
+            throw new Exception("Record with ID " + updatedPlanet.getId() + " not found.");
+        }
+    
+        byte[] newRecordData = updatedPlanet.toByteArray();
+        int newRecordSize = newRecordData.length - 2; // exclui o tamanho da lapide
+        boolean recordFound = false;
+    
+        while (raf.getFilePointer() < raf.length()) {
+            long recordPosition = raf.getFilePointer();
+            int recordSize = raf.readInt(); //Lê o tam do registro antigo
+            char lapide = raf.readChar();  // Lê 'lapide'
+    
+            byte[] oldRecordData = new byte[recordSize];
+            raf.read(oldRecordData);  // Lê os dados do registro antigo
+    
+            Planet existingPlanet = new Planet();
+            existingPlanet.fromByteArray(oldRecordData);
+    
+            if (lapide == '+' && existingPlanet.getId() == updatedPlanet.getId()) {
+                recordFound = true;
+                // Marca a 'lapide' do registro antigo como '!'
+                raf.seek(recordPosition + 4);
+                raf.writeChar('!');
+    
+                // Concatena o novo registro no final do arquivo
+                raf.seek(raf.length());
+                raf.writeInt(newRecordSize);
+                raf.write(newRecordData);
+    
+                raf.close();
+                return;
+            }
+        }
+    
+        raf.close();
+        throw new Exception("Record with ID " + updatedPlanet.getId() + " not found.");
     }
     
     //Método que marca como lápide um registro no arquivo binário e retorna ele como objeto

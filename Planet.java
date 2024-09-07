@@ -1,8 +1,8 @@
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+
 public class Planet {
     private int id;
     private long dateRelaseSecond;
@@ -42,6 +42,33 @@ public class Planet {
         
         this.dateRelaseSecond = dataRelase;
     }
+
+        public Planet(int id, String name, String host, int numStars, int numPlanets,
+            String discoveryMethod, int discoveryYear, String discoveryFacility, boolean controv, long mass,
+            double starTemperature, String metalRatio,String dataRelase) {
+        this.id = id;
+        this.name = name;
+        this.host = host;
+        this.numStars = numStars;
+        this.numPlanets = numPlanets;
+        this.discoveryMethod = discoveryMethod;
+        this.discoveryYear = discoveryYear;
+        this.discoveryFacility = discoveryFacility;
+        this.controv = controv;
+        this.mass = mass;
+        this.starTemperature = starTemperature;
+        //tratando caso de nao haver informações
+        String[] tmp = {"V"};
+        if(metalRatio == null){this.metalRatio = tmp;}
+        else{
+            metalRatio = metalRatio.replaceAll("[\\[\\]]", "");
+            this.metalRatio = metalRatio.split("/");
+        }
+        
+        this.dateRelaseSecond = dateToSeconds(dataRelase);
+    }
+
+    
 
     //construtor com parametro
     public Planet() {
@@ -123,12 +150,23 @@ public class Planet {
         "\nStellar Mass: " + mass + "\nStellar Temperature: " + starTemperature;
     }
 
+    public static long dateToSeconds(String date) {
+        if(date == null){return 0L;}
+        LocalDate localDate = LocalDate.parse(date);
+        
+        Instant instant = localDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+        
+        long secondsSinceEpoch = instant.getEpochSecond();
+        
+        return secondsSinceEpoch*1000;
+       }
+
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setDataRelase(long dataRelase) {
-        this.dateRelaseSecond = dataRelase;
+    public void setDataRelase(String dataRelase) {
+        this.dateRelaseSecond = dateToSeconds(dataRelase);
     }
 
     public void setName(String name) {
