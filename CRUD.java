@@ -78,7 +78,7 @@ public class CRUD {//modificar linha 966 , 4953 a 4957, 4992, 4991 a 4996, 36162
         create(tmp);
     }
     
-    private void create(Planet planet)throws Exception{
+    public void create(Planet planet)throws Exception{
         File file = new File(FILE_NAME);
         boolean exists = file.exists();
         
@@ -215,7 +215,7 @@ public class CRUD {//modificar linha 966 , 4953 a 4957, 4992, 4991 a 4996, 36162
         update(updatedPlanet);
     }
 
-    private void update(Planet updatedPlanet) throws Exception {
+    public void update(Planet updatedPlanet) throws Exception {
         RandomAccessFile raf = new RandomAccessFile(FILE_NAME, "rw");
         int lastId = raf.readInt();  //Lê o último ID
     

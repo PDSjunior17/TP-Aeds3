@@ -6,17 +6,17 @@ import java.time.ZoneOffset;
 public class Planet {
     private int id;
     private long dateRelaseSecond;
-    private String name;//string de tamanho variavel
-    private String host;//string de tamanho fixo, colocar um teste de avaliação
+    private String name;
+    private String host;
     private int numStars;
     private int numPlanets;
-    private String discoveryMethod;//string de tamanho fixo, colocar um teste de avaliação
+    private String discoveryMethod;
     private int discoveryYear;
-    private String discoveryFacility;//string de tamanho variavel
+    private String discoveryFacility;
     private boolean controv;
     private long  mass;
-    private double starTemperature;//usar o numero -1 para representar que não tem o valor da temperatura
-    private String[] metalRatio;//lista de valores
+    private double starTemperature;
+    private String[] metalRatio;
 
     public Planet(int id, String name, String host, int numStars, int numPlanets,
             String discoveryMethod, int discoveryYear, String discoveryFacility, boolean controv, long mass,
