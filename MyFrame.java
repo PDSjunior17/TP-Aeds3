@@ -282,11 +282,25 @@ public class MyFrame extends JFrame implements ActionListener {
                 tmp.setstarTemperature(Double.parseDouble(tempStr));
             }
     
+            // First, verify the return value isn't null
+            String[] currentRatios = tmp.getMetalRatio();
+            if (currentRatios == null || currentRatios.length < 2) {
+                currentRatios = new String[]{"", ""}; // Default values
+            }
+
             // Metal ratio (array of two strings)
             String[] metalRatioLines = new String[2];
-            metalRatioLines[0] = JOptionPane.showInputDialog(this, "Inserir a primeira linha da proporção metálica:", tmp.getMetalRatio()[0]);
-            metalRatioLines[1] = JOptionPane.showInputDialog(this, "Inserir a segunda linha da proporção metálica:", tmp.getMetalRatio()[1]);
-            tmp.setMetalRatio(metalRatioLines);
+            metalRatioLines[0] = JOptionPane.showInputDialog(this, 
+                "Inserir a primeira linha da proporção metálica:", 
+                currentRatios[0]);
+            metalRatioLines[1] = JOptionPane.showInputDialog(this, 
+                "Inserir a segunda linha da proporção metálica:", 
+                currentRatios[1]);
+
+            // Null check before setting
+            if (metalRatioLines[0] != null && metalRatioLines[1] != null) {
+                tmp.setMetalRatio(metalRatioLines);
+            }
     
             // Call the CRUD update method with the updated Planet object
             crud.update(tmp);

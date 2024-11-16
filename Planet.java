@@ -147,7 +147,7 @@ public class Planet {
         return "\nID: " + id + "\nDate: " + secondsToDate(dateRelaseSecond) + "\nName: " + name + "\nHost: " + host + 
         "\nNumber of Stars: " + numStars + "\nNumber of Planets: " + numPlanets + "\nDiscovery Method: " + discoveryMethod + 
         "\nDiscovery Year: " + discoveryYear + "\nDiscovery Facility: " + discoveryFacility + "\nControversial Flag: " + controv + 
-        "\nStellar Mass: " + mass + "\nStellar Temperature: " + starTemperature;
+        "\nStellar Mass: " + mass + "\nStellar Temperature: " + starTemperature + "\nMetal Ratio: " + metalRatio[0] + "/" + metalRatio[1];
     }
 
     public static String secondsToDate(long dateReleaseSeconds) {
