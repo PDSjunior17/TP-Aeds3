@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 
 public class MyFrame extends JFrame implements ActionListener {
     Scanner entrada = new Scanner(System.in);
-    JButton buttonLoad, buttonCreate, buttonRead, buttonUpdate, buttonDelete, buttonExit;
+    JButton buttonLoad, buttonCreate, buttonRead, buttonUpdate, buttonDelete, buttonExit, buttonCompression;
     JLabel labelMessage; // Label for displaying confirmation messages
     CRUD crud; // CRUD object to perform operations
 
@@ -43,17 +43,21 @@ public class MyFrame extends JFrame implements ActionListener {
         buttonDelete.setBounds(175, 340, 150, 30);
         buttonDelete.addActionListener(this);
 
+        buttonCompression = new JButton("Compression");
+        buttonCompression.setBounds(175, 400, 150, 30);
+        buttonCompression.addActionListener(this);
+
         buttonExit = new JButton("Exit");
-        buttonExit.setBounds(175, 400, 150, 30);
+        buttonExit.setBounds(175, 460, 150, 30);
         buttonExit.addActionListener(this);
 
         labelMessage = new JLabel(""); // Message label
-        labelMessage.setBounds(50, 450, 400, 30);
+        labelMessage.setBounds(50, 500, 400, 30);
 
         // Frame setup
         this.setTitle("GUI CRUD Interface");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 550);
+        this.setSize(500, 600);
         this.setVisible(true);
         this.setLayout(null);
         this.getContentPane().setBackground(new Color(0xffffff));
@@ -65,6 +69,7 @@ public class MyFrame extends JFrame implements ActionListener {
         this.add(buttonRead);
         this.add(buttonUpdate);
         this.add(buttonDelete);
+        this.add(buttonCompression);
         this.add(buttonExit);
         this.add(labelMessage);
     }
@@ -94,6 +99,7 @@ public class MyFrame extends JFrame implements ActionListener {
                     labelMessage.setText("Planet not found.");
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
                 labelMessage.setText("Invalid ID format.");
             }
         }
@@ -119,6 +125,10 @@ public class MyFrame extends JFrame implements ActionListener {
             } catch (Exception ex) {
                 labelMessage.setText("Invalid ID format.");
             }
+        }
+        if (e.getSource() == buttonCompression) {
+            CompressionMenu compressionMenu = new CompressionMenu();
+            compressionMenu.setVisible(true);
         }
         if (e.getSource() == buttonExit) {
             System.exit(0);

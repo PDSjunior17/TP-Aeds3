@@ -6,138 +6,96 @@ import java.util.*;
 public class CompressionSystem {
     private static final String HUFFMAN_EXT = ".huff";
     private static final String LZW_EXT = ".lzw";
-    private static int currentVersion = 1;
     
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            System.out.println("\n=== Sistema de Compressão de Arquivos ===");
-            System.out.println("1. Comprimir arquivo");
-            System.out.println("2. Descomprimir arquivo");
-            System.out.println("3. Sair");
-            System.out.print("Escolha uma opção: ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
-            String version1, version2;
-            
-            switch (choice) {
-                case 1:
-                    compressFile(scanner);
-                    break;
-                case 2:
-                    System.out.println("Digite a versão que deseja descomprimir:");
-                    version1 = scanner.nextLine();
-                    version2 = version1;
-                    version1 = "data/planets_huffmanV" + version1 + ".huff";
-                    decompressFile(version1);
-                    version2 = "data/planets_lzwV" + version2 + ".lzw";
-                    decompressFile(version2);
-                    break;
-                case 3:
-                    System.out.println("Encerrando o programa...");
-                    return;
-                default:
-                    System.out.println("Opção inválida!");
-            }
-        }
-    }
-    
-    private static void compressFile(Scanner scanner) {
+    // Retorna uma string com os resultados da compressão para exibição na GUI
+    public static String compressFile(String version) throws Exception {
+        StringBuilder results = new StringBuilder();
         try {
             String inputFile = "data/planets.db";
             
             if (!new File(inputFile).exists()) {
-                System.out.println("Erro: Arquivo não encontrado!");
-                return;
+                throw new Exception("Arquivo não encontrado!");
             }
             
-            // Preparar nomes dos arquivos
+            // Prepara os nomes dos arquivos
             String baseFileName = inputFile.replaceFirst("[.][^.]+$", "");
-            String huffmanOutput = baseFileName + "_huffmanV" + currentVersion + HUFFMAN_EXT;
-            String lzwOutput = baseFileName + "_lzwV" + currentVersion + LZW_EXT;
+            String huffmanOutput = baseFileName + "_huffmanV" + version + HUFFMAN_EXT;
+            String lzwOutput = baseFileName + "_lzwV" + version + LZW_EXT;
             
-            // Comprimir com Huffman
-            System.out.println("\nIniciando compressão Huffman...");
+            // Comprime com Huffman
             long startTime = System.nanoTime();
             long originalSize = new File(inputFile).length();
             HuffmanBinaryCompression.compressFile(inputFile, huffmanOutput);
             long huffmanTime = System.nanoTime() - startTime;
             long huffmanSize = new File(huffmanOutput).length();
             
-            // Comprimir com LZW
-            System.out.println("\nIniciando compressão LZW...");
+            // Comprime com LZW
             startTime = System.nanoTime();
             LZWCompression.compress(inputFile, lzwOutput);
             long lzwTime = System.nanoTime() - startTime;
             long lzwSize = new File(lzwOutput).length();
             
-            // Calcular e mostrar estatísticas
+            // Calcula e exibe as estatísticas
             double huffmanRatio = 100.0 * (1 - (double)huffmanSize/originalSize);
             double lzwRatio = 100.0 * (1 - (double)lzwSize/originalSize);
             
-            System.out.println("\n=== Resultados da Compressão ===");
-            System.out.printf("Tamanho original: %,d bytes%n", originalSize);
-            System.out.println("\nHuffman:");
-            System.out.printf("- Tamanho final: %,d bytes%n", huffmanSize);
-            System.out.printf("- Taxa de compressão: %.2f%%%n", huffmanRatio);
-            System.out.printf("- Tempo de execução: %.2f ms%n", huffmanTime/1e6);
+            results.append("\n=== Resultados da Compressão ===\n");
+            results.append(String.format("Tamanho original: %,d bytes%n", originalSize));
+            results.append("\nHuffman:\n");
+            results.append(String.format("- Tamanho final: %,d bytes%n", huffmanSize));
+            results.append(String.format("- Taxa de compressão: %.2f%%%n", huffmanRatio));
+            results.append(String.format("- Tempo de execução: %.2f ms%n", huffmanTime/1e6));
             
-            System.out.println("\nLZW:");
-            System.out.printf("- Tamanho final: %,d bytes%n", lzwSize);
-            System.out.printf("- Taxa de compressão: %.2f%%%n", lzwRatio);
-            System.out.printf("- Tempo de execução: %.2f ms%n", lzwTime/1e6);
+            results.append("\nLZW:\n");
+            results.append(String.format("- Tamanho final: %,d bytes%n", lzwSize));
+            results.append(String.format("- Taxa de compressão: %.2f%%%n", lzwRatio));
+            results.append(String.format("- Tempo de execução: %.2f ms%n", lzwTime/1e6));
             
-            // Comparar resultados
-            System.out.println("\nComparação:");
+            // Compara os resultados
+            results.append("\nComparação:\n");
             if (huffmanRatio > lzwRatio) {
-                System.out.println("Huffman teve melhor taxa de compressão!");
+                results.append("Huffman teve melhor taxa de compressão!\n");
             } else if (lzwRatio > huffmanRatio) {
-                System.out.println("LZW teve melhor taxa de compressão!");
+                results.append("LZW teve melhor taxa de compressão!\n");
             } else {
-                System.out.println("Ambos algoritmos tiveram a mesma taxa de compressão.");
+                results.append("Ambos os algoritmos tiveram a mesma taxa de compressão.\n");
             }
             
             if (huffmanTime < lzwTime) {
-                System.out.println("Huffman foi mais rápido!");
+                results.append("Huffman foi mais rápido!\n");
             } else if (lzwTime < huffmanTime) {
-                System.out.println("LZW foi mais rápido!");
+                results.append("LZW foi mais rápido!\n");
             } else {
-                System.out.println("Ambos algoritmos tiveram o mesmo tempo de execução.");
+                results.append("Ambos os algoritmos tiveram o mesmo tempo de execução.\n");
             }
             
-            currentVersion++;
+            return results.toString();
             
         } catch (Exception e) {
-            System.err.println("Erro durante a compressão: " + e.getMessage());
-            e.printStackTrace();
+            throw new Exception("Erro durante a compressão: " + e.getMessage());
         }
     }
     
-    private static void decompressFile(String compressedFile) {
+    public static String decompressFile(String compressedFile) throws Exception {
+        StringBuilder results = new StringBuilder();
         try {
-          
-            
             if (!new File(compressedFile).exists()) {
-                System.out.println("Erro: Arquivo não encontrado!");
-                return;
+                throw new Exception("Arquivo não encontrado!");
             }
             
-            // Identificar algoritmo pelo nome do arquivo
+            // Identifica o algoritmo pelo nome do arquivo
             boolean isHuffman = compressedFile.contains("_huffmanV");
             boolean isLZW = compressedFile.contains("_lzwV");
             
             if (!isHuffman && !isLZW) {
-                System.out.println("Erro: Formato de arquivo não reconhecido!");
-                return;
+                throw new Exception("Formato de arquivo não reconhecido!");
             }
             
-            // Extrair nome base do arquivo
+            // Extrai o nome base do arquivo
             String baseFileName = compressedFile.split("_")[0];
             String outputFile = baseFileName + ".db";
             
-            // Descomprimir
-            System.out.println("\nIniciando descompressão...");
+            // Descomprime
             long startTime = System.nanoTime();
             
             if (isHuffman) {
@@ -148,13 +106,14 @@ public class CompressionSystem {
             
             long executionTime = System.nanoTime() - startTime;
             
-            System.out.println("\n=== Resultados da Descompressão do arquivo "+ compressedFile + "===");
-            System.out.printf("Arquivo descomprimido: %s%n", outputFile);
-            System.out.printf("Tempo de execução: %.2f ms%n", executionTime/1e6);
+            results.append("\n=== Resultados da Descompressão para " + compressedFile + " ===\n");
+            results.append(String.format("Arquivo descomprimido: %s%n", outputFile));
+            results.append(String.format("Tempo de execução: %.2f ms%n", executionTime/1e6));
+            
+            return results.toString();
             
         } catch (Exception e) {
-            System.err.println("Erro durante a descompressão: " + e.getMessage());
-            e.printStackTrace();
+            throw new Exception("Erro durante a descompressão: " + e.getMessage());
         }
     }
 }
