@@ -1,4 +1,4 @@
-// File: MyFrame.java
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,16 +13,16 @@ import javax.swing.JTextField;
 
 public class MyFrame extends JFrame implements ActionListener {
     Scanner entrada = new Scanner(System.in);
-    JButton buttonLoad, buttonCreate, buttonRead, buttonUpdate, buttonDelete, buttonExit, buttonCompression;
-    JLabel labelMessage; // Label for displaying confirmation messages
-    CRUD crud; // CRUD object to perform operations
+    JButton buttonLoad, buttonCreate, buttonRead, buttonUpdate, buttonDelete, buttonExit, buttonCompression, buttonSearch;
+    JLabel labelMessage; 
+    CRUD crud; 
 
     MyFrame() {
-        crud = new CRUD(); // Initialize the CRUD instance
+        crud = new CRUD(); 
 
         ImageIcon icon = new ImageIcon("data/logo.png");
 
-        // Setup buttons
+        
         buttonLoad = new JButton("Load");
         buttonLoad.setBounds(175, 100, 150, 30);
         buttonLoad.addActionListener(this);
@@ -35,38 +35,43 @@ public class MyFrame extends JFrame implements ActionListener {
         buttonRead.setBounds(175, 220, 150, 30);
         buttonRead.addActionListener(this);
 
+        buttonSearch = new JButton("Search");
+        buttonSearch.setBounds(175, 280, 150, 30);
+        buttonSearch.addActionListener(this);
+
         buttonUpdate = new JButton("Update");
-        buttonUpdate.setBounds(175, 280, 150, 30);
+        buttonUpdate.setBounds(175, 340, 150, 30);
         buttonUpdate.addActionListener(this);
 
         buttonDelete = new JButton("Delete");
-        buttonDelete.setBounds(175, 340, 150, 30);
+        buttonDelete.setBounds(175, 400, 150, 30);
         buttonDelete.addActionListener(this);
 
         buttonCompression = new JButton("Compression");
-        buttonCompression.setBounds(175, 400, 150, 30);
+        buttonCompression.setBounds(175, 460, 150, 30);
         buttonCompression.addActionListener(this);
 
         buttonExit = new JButton("Exit");
-        buttonExit.setBounds(175, 460, 150, 30);
+        buttonExit.setBounds(175, 520, 150, 30);
         buttonExit.addActionListener(this);
 
-        labelMessage = new JLabel(""); // Message label
-        labelMessage.setBounds(50, 500, 400, 30);
+        labelMessage = new JLabel(""); 
+        labelMessage.setBounds(50, 560, 400, 30);
 
-        // Frame setup
+        
         this.setTitle("GUI CRUD Interface");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 600);
+        this.setSize(500, 660);
         this.setVisible(true);
         this.setLayout(null);
         this.getContentPane().setBackground(new Color(0xffffff));
         this.setIconImage(icon.getImage());
 
-        // Add buttons and labels to the frame
+        
         this.add(buttonLoad);
         this.add(buttonCreate);
         this.add(buttonRead);
+        this.add(buttonSearch);
         this.add(buttonUpdate);
         this.add(buttonDelete);
         this.add(buttonCompression);
@@ -80,9 +85,9 @@ public class MyFrame extends JFrame implements ActionListener {
             try {
                 crud.load();
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
+                
                 e1.printStackTrace();
-            } // Load data
+            } 
             labelMessage.setText("Data loaded successfully!");
         }
         if (e.getSource() == buttonCreate) {
@@ -102,6 +107,10 @@ public class MyFrame extends JFrame implements ActionListener {
                 ex.printStackTrace();
                 labelMessage.setText("Invalid ID format.");
             }
+        }
+        if (e.getSource() == buttonSearch) {
+            SearchWindow searchWindow = new SearchWindow(crud);
+            searchWindow.setVisible(true);
         }
         if (e.getSource() == buttonUpdate) {
             String idStr = JOptionPane.showInputDialog(this, "Enter the ID of the planet to update:");
@@ -135,13 +144,13 @@ public class MyFrame extends JFrame implements ActionListener {
         }
     }
 
-    // Helper method to show a new window for creating a planet
+    
     private void showCreateWindow() {
         Planet tmp = new Planet();
         try {
-            tmp.setId(0); // Auto-generate or set default ID
+            tmp.setId(0); 
     
-            // Sequential prompts to fill in the Planet fields
+            
             String name = JOptionPane.showInputDialog(this, "Inserir nome:");
             if (name != null && !name.isEmpty()) {
                 tmp.setName(name);
@@ -159,12 +168,12 @@ public class MyFrame extends JFrame implements ActionListener {
     
             String numStarsStr = JOptionPane.showInputDialog(this, "Inserir número de estrelas:");
             if (numStarsStr != null && !numStarsStr.isEmpty()) {
-                tmp.setNumStars(Integer.parseInt(numStarsStr)); // Parse integer
+                tmp.setNumStars(Integer.parseInt(numStarsStr)); 
             }
     
             String numPlanetsStr = JOptionPane.showInputDialog(this, "Inserir número de planetas:");
             if (numPlanetsStr != null && !numPlanetsStr.isEmpty()) {
-                tmp.setNumPlanets(Integer.parseInt(numPlanetsStr)); // Parse integer
+                tmp.setNumPlanets(Integer.parseInt(numPlanetsStr)); 
             }
     
             String discoveryMethod = JOptionPane.showInputDialog(this, "Inserir método de descoberta:");
@@ -174,7 +183,7 @@ public class MyFrame extends JFrame implements ActionListener {
     
             String discoveryYearStr = JOptionPane.showInputDialog(this, "Inserir ano de descoberta:");
             if (discoveryYearStr != null && !discoveryYearStr.isEmpty()) {
-                tmp.setDiscoveryYear(Integer.parseInt(discoveryYearStr)); // Parse integer
+                tmp.setDiscoveryYear(Integer.parseInt(discoveryYearStr)); 
             }
     
             String discoveryFacility = JOptionPane.showInputDialog(this, "Inserir local de descoberta:");
@@ -184,26 +193,26 @@ public class MyFrame extends JFrame implements ActionListener {
     
             String controvStr = JOptionPane.showInputDialog(this, "Inserir flag de controvérsia (true/false):");
             if (controvStr != null && !controvStr.isEmpty()) {
-                tmp.setControv(Boolean.parseBoolean(controvStr)); // Parse boolean
+                tmp.setControv(Boolean.parseBoolean(controvStr)); 
             }
     
             String massStr = JOptionPane.showInputDialog(this, "Inserir massa estelar:");
             if (massStr != null && !massStr.isEmpty()) {
-                tmp.setMass(Long.parseLong(massStr)); // Parse long
+                tmp.setMass(Long.parseLong(massStr)); 
             }
     
             String tempStr = JOptionPane.showInputDialog(this, "Inserir temperatura estelar:");
             if (tempStr != null && !tempStr.isEmpty()) {
-                tmp.setstarTemperature(Double.parseDouble(tempStr)); // Parse double
+                tmp.setstarTemperature(Double.parseDouble(tempStr)); 
             }
     
-            // Collect two lines for the metal ratio
+            
             String[] metalRatioLines = new String[2];
             metalRatioLines[0] = JOptionPane.showInputDialog(this, "Insira a primeira linha da proporção metálica:");
             metalRatioLines[1] = JOptionPane.showInputDialog(this, "Insira a segunda linha da proporção metálica:");
             tmp.setMetalRatio(metalRatioLines);
     
-            // Call the CRUD create method with the completed Planet object
+            
             crud.create(tmp);
             labelMessage.setText("Planet with ID "+ tmp.getId() +" created successfully!");
             
@@ -215,90 +224,90 @@ public class MyFrame extends JFrame implements ActionListener {
     }
     
 
-    // Helper method to show a new window for updating a planet
+    
     private void showUpdateWindow(int id) throws Exception{
-        Planet tmp = crud.read(id); // Fetch the existing Planet record
+        Planet tmp = crud.read(id); 
         if (tmp == null) {
             labelMessage.setText("Planet with ID " + id + " not found.");
             return;
         }
     
         try {
-            // Sequentially prompt the user for each field, allowing them to modify or keep the existing value
+            
     
-            // Name (variable length string)
+            
             String name = JOptionPane.showInputDialog(this, "Inserir nome:", tmp.getName());
             if (name != null && !name.isEmpty()) {
                 tmp.setName(name);
             }
     
-            // Date of release in seconds (long)
+            
             String dataRelease = JOptionPane.showInputDialog(this, "Inserir data (yyyy-mm-dd):");
             if (dataRelease != null && !dataRelease.isEmpty()) {
                 tmp.setDataRelase(dataRelease);
             }
     
-            // Host (fixed length string, validated)
+            
             String host = JOptionPane.showInputDialog(this, "Inserir estrela hospedeira:");
             if (host != null && !host.isEmpty()) {
                 tmp.setHost(host);
             }
     
-            // Number of stars (int)
+            
             String numStarsStr = JOptionPane.showInputDialog(this, "Inserir número de estrelas:", tmp.getNumStars());
             if (numStarsStr != null && !numStarsStr.isEmpty()) {
                 tmp.setNumStars(Integer.parseInt(numStarsStr));
             }
     
-            // Number of planets (int)
+            
             String numPlanetsStr = JOptionPane.showInputDialog(this, "Inserir número de planetas:", tmp.getNumPlanets());
             if (numPlanetsStr != null && !numPlanetsStr.isEmpty()) {
                 tmp.setNumPlanets(Integer.parseInt(numPlanetsStr));
             }
     
-            // Discovery method (fixed length string, validated)
+            
             String discoveryMethod = JOptionPane.showInputDialog(this, "Inserir método de descoberta:");
             if (discoveryMethod != null && !discoveryMethod.isEmpty()) {
                 tmp.setDiscoveryMethod(discoveryMethod);
             }
     
-            // Discovery year (int)
+            
             String discoveryYearStr = JOptionPane.showInputDialog(this, "Inserir ano de descoberta:", tmp.getDiscoveryYear());
             if (discoveryYearStr != null && !discoveryYearStr.isEmpty()) {
                 tmp.setDiscoveryYear(Integer.parseInt(discoveryYearStr));
             }
     
-            // Discovery facility (variable length string)
+            
             String discoveryFacility = JOptionPane.showInputDialog(this, "Inserir local de descoberta:", tmp.getDiscoveryFacility());
             if (discoveryFacility != null && !discoveryFacility.isEmpty()) {
                 tmp.setDiscoveryFacility(discoveryFacility);
             }
     
-            // Controversial flag (boolean)
+            
             String controvStr = JOptionPane.showInputDialog(this, "Inserir flag de controvérsia (true/false):", tmp.isControv());
             if (controvStr != null && !controvStr.isEmpty()) {
                 tmp.setControv(Boolean.parseBoolean(controvStr));
             }
     
-            // Mass (long)
+            
             String massStr = JOptionPane.showInputDialog(this, "Inserir massa estelar:", tmp.getMass());
             if (massStr != null && !massStr.isEmpty()) {
                 tmp.setMass(Long.parseLong(massStr));
             }
     
-            // Star temperature (double, with -1 for no value)
+            
             String tempStr = JOptionPane.showInputDialog(this, "Inserir temperatura estelar (ou -1 se desconhecida):", tmp.getstarTemperature());
             if (tempStr != null && !tempStr.isEmpty()) {
                 tmp.setstarTemperature(Double.parseDouble(tempStr));
             }
     
-            // First, verify the return value isn't null
+            
             String[] currentRatios = tmp.getMetalRatio();
             if (currentRatios == null || currentRatios.length < 2) {
-                currentRatios = new String[]{"", ""}; // Default values
+                currentRatios = new String[]{"", ""}; 
             }
 
-            // Metal ratio (array of two strings)
+            
             String[] metalRatioLines = new String[2];
             metalRatioLines[0] = JOptionPane.showInputDialog(this, 
                 "Inserir a primeira linha da proporção metálica:", 
@@ -307,12 +316,12 @@ public class MyFrame extends JFrame implements ActionListener {
                 "Inserir a segunda linha da proporção metálica:", 
                 currentRatios[1]);
 
-            // Null check before setting
+            
             if (metalRatioLines[0] != null && metalRatioLines[1] != null) {
                 tmp.setMetalRatio(metalRatioLines);
             }
     
-            // Call the CRUD update method with the updated Planet object
+            
             crud.update(tmp);
             labelMessage.setText("Planet updated successfully!");
     
