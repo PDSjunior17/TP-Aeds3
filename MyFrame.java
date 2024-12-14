@@ -13,16 +13,19 @@ import javax.swing.JTextField;
 
 public class MyFrame extends JFrame implements ActionListener {
     Scanner entrada = new Scanner(System.in);
-    JButton buttonLoad, buttonCreate, buttonRead, buttonUpdate, buttonDelete, buttonExit, buttonCompression, buttonSearch;
-    JLabel labelMessage; 
-    CRUD crud; 
+    JButton buttonLoad, buttonCreate, buttonRead, buttonUpdate, buttonDelete, buttonExit, 
+            buttonCompression, buttonSearch, buttonEncryptRSA, buttonDecryptRSA,
+            buttonEncryptColumns, buttonDecryptColumns;
+    JLabel labelMessage;
+    CRUD crud;
+    RSA rsa;
 
     MyFrame() {
-        crud = new CRUD(); 
+        crud = new CRUD();
+        rsa = new RSA();
 
         ImageIcon icon = new ImageIcon("data/logo.png");
 
-        
         buttonLoad = new JButton("Load");
         buttonLoad.setBounds(175, 100, 150, 30);
         buttonLoad.addActionListener(this);
@@ -51,23 +54,38 @@ public class MyFrame extends JFrame implements ActionListener {
         buttonCompression.setBounds(175, 460, 150, 30);
         buttonCompression.addActionListener(this);
 
+        // New encryption buttons
+        buttonEncryptRSA = new JButton("Encrypt RSA");
+        buttonEncryptRSA.setBounds(25, 520, 150, 30);
+        buttonEncryptRSA.addActionListener(this);
+
+        buttonDecryptRSA = new JButton("Decrypt RSA");
+        buttonDecryptRSA.setBounds(175, 520, 150, 30);
+        buttonDecryptRSA.addActionListener(this);
+
+        buttonEncryptColumns = new JButton("Encrypt Columns");
+        buttonEncryptColumns.setBounds(325, 520, 150, 30);
+        buttonEncryptColumns.addActionListener(this);
+
+        buttonDecryptColumns = new JButton("Decrypt Columns");
+        buttonDecryptColumns.setBounds(175, 560, 150, 30);
+        buttonDecryptColumns.addActionListener(this);
+
         buttonExit = new JButton("Exit");
-        buttonExit.setBounds(175, 520, 150, 30);
+        buttonExit.setBounds(175, 600, 150, 30);
         buttonExit.addActionListener(this);
 
-        labelMessage = new JLabel(""); 
-        labelMessage.setBounds(50, 560, 400, 30);
+        labelMessage = new JLabel("");
+        labelMessage.setBounds(50, 640, 400, 30);
 
-        
         this.setTitle("GUI CRUD Interface");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 660);
+        this.setSize(500, 720);
         this.setVisible(true);
         this.setLayout(null);
         this.getContentPane().setBackground(new Color(0xffffff));
         this.setIconImage(icon.getImage());
 
-        
         this.add(buttonLoad);
         this.add(buttonCreate);
         this.add(buttonRead);
@@ -75,6 +93,10 @@ public class MyFrame extends JFrame implements ActionListener {
         this.add(buttonUpdate);
         this.add(buttonDelete);
         this.add(buttonCompression);
+        this.add(buttonEncryptRSA);
+        this.add(buttonDecryptRSA);
+        this.add(buttonEncryptColumns);
+        this.add(buttonDecryptColumns);
         this.add(buttonExit);
         this.add(labelMessage);
     }
@@ -85,9 +107,8 @@ public class MyFrame extends JFrame implements ActionListener {
             try {
                 crud.load();
             } catch (Exception e1) {
-                
                 e1.printStackTrace();
-            } 
+            }
             labelMessage.setText("Data loaded successfully!");
         }
         if (e.getSource() == buttonCreate) {
@@ -139,172 +160,194 @@ public class MyFrame extends JFrame implements ActionListener {
             CompressionMenu compressionMenu = new CompressionMenu();
             compressionMenu.setVisible(true);
         }
+        if (e.getSource() == buttonEncryptRSA) {
+            try {
+                rsa.encrypt();
+                labelMessage.setText("Database encrypted with RSA successfully!");
+            } catch (Exception ex) {
+                labelMessage.setText("Error encrypting with RSA: " + ex.getMessage());
+            }
+        }
+        if (e.getSource() == buttonDecryptRSA) {
+            try {
+                rsa.decrypt();
+                labelMessage.setText("Database decrypted with RSA successfully!");
+            } catch (Exception ex) {
+                labelMessage.setText("Error decrypting with RSA: " + ex.getMessage());
+            }
+        }
+        if (e.getSource() == buttonEncryptColumns) {
+            String key = JOptionPane.showInputDialog(this, "Enter encryption key for Columns method:");
+            if (key != null && !key.isEmpty()) {
+                try {
+                    Colunas.encrypt("data/planets.db", "data/planets_encrypted_columns.db", key);
+                    labelMessage.setText("Database encrypted with Columns method successfully!");
+                } catch (Exception ex) {
+                    labelMessage.setText("Error encrypting with Columns: " + ex.getMessage());
+                }
+            } else {
+                labelMessage.setText("Encryption cancelled - no key provided.");
+            }
+        }
+        if (e.getSource() == buttonDecryptColumns) {
+            String key = JOptionPane.showInputDialog(this, "Enter decryption key for Columns method:");
+            if (key != null && !key.isEmpty()) {
+                try {
+                    Colunas.decrypt("data/planets_encrypted_columns.db", "data/planets_decrypted_columns.db", key);
+                    labelMessage.setText("Database decrypted with Columns method successfully!");
+                } catch (Exception ex) {
+                    labelMessage.setText("Error decrypting with Columns: " + ex.getMessage());
+                }
+            } else {
+                labelMessage.setText("Decryption cancelled - no key provided.");
+            }
+        }
         if (e.getSource() == buttonExit) {
             System.exit(0);
         }
     }
 
-    
     private void showCreateWindow() {
         Planet tmp = new Planet();
         try {
-            tmp.setId(0); 
-    
-            
+            tmp.setId(0);
+
             String name = JOptionPane.showInputDialog(this, "Inserir nome:");
             if (name != null && !name.isEmpty()) {
                 tmp.setName(name);
             }
-    
+
             String dataRelease = JOptionPane.showInputDialog(this, "Inserir data (yyyy-mm-dd):");
             if (dataRelease != null && !dataRelease.isEmpty()) {
                 tmp.setDataRelase(dataRelease);
             }
-    
+
             String host = JOptionPane.showInputDialog(this, "Inserir estrela hospedeira:");
             if (host != null && !host.isEmpty()) {
                 tmp.setHost(host);
             }
-    
+
             String numStarsStr = JOptionPane.showInputDialog(this, "Inserir número de estrelas:");
             if (numStarsStr != null && !numStarsStr.isEmpty()) {
-                tmp.setNumStars(Integer.parseInt(numStarsStr)); 
+                tmp.setNumStars(Integer.parseInt(numStarsStr));
             }
-    
+
             String numPlanetsStr = JOptionPane.showInputDialog(this, "Inserir número de planetas:");
             if (numPlanetsStr != null && !numPlanetsStr.isEmpty()) {
-                tmp.setNumPlanets(Integer.parseInt(numPlanetsStr)); 
+                tmp.setNumPlanets(Integer.parseInt(numPlanetsStr));
             }
-    
+
             String discoveryMethod = JOptionPane.showInputDialog(this, "Inserir método de descoberta:");
             if (discoveryMethod != null && !discoveryMethod.isEmpty()) {
                 tmp.setDiscoveryMethod(discoveryMethod);
             }
-    
+
             String discoveryYearStr = JOptionPane.showInputDialog(this, "Inserir ano de descoberta:");
             if (discoveryYearStr != null && !discoveryYearStr.isEmpty()) {
-                tmp.setDiscoveryYear(Integer.parseInt(discoveryYearStr)); 
+                tmp.setDiscoveryYear(Integer.parseInt(discoveryYearStr));
             }
-    
+
             String discoveryFacility = JOptionPane.showInputDialog(this, "Inserir local de descoberta:");
             if (discoveryFacility != null && !discoveryFacility.isEmpty()) {
                 tmp.setDiscoveryFacility(discoveryFacility);
             }
-    
+
             String controvStr = JOptionPane.showInputDialog(this, "Inserir flag de controvérsia (true/false):");
             if (controvStr != null && !controvStr.isEmpty()) {
-                tmp.setControv(Boolean.parseBoolean(controvStr)); 
+                tmp.setControv(Boolean.parseBoolean(controvStr));
             }
-    
+
             String massStr = JOptionPane.showInputDialog(this, "Inserir massa estelar:");
             if (massStr != null && !massStr.isEmpty()) {
-                tmp.setMass(Long.parseLong(massStr)); 
+                tmp.setMass(Long.parseLong(massStr));
             }
-    
+
             String tempStr = JOptionPane.showInputDialog(this, "Inserir temperatura estelar:");
             if (tempStr != null && !tempStr.isEmpty()) {
-                tmp.setstarTemperature(Double.parseDouble(tempStr)); 
+                tmp.setstarTemperature(Double.parseDouble(tempStr));
             }
-    
-            
+
             String[] metalRatioLines = new String[2];
             metalRatioLines[0] = JOptionPane.showInputDialog(this, "Insira a primeira linha da proporção metálica:");
             metalRatioLines[1] = JOptionPane.showInputDialog(this, "Insira a segunda linha da proporção metálica:");
             tmp.setMetalRatio(metalRatioLines);
-    
-            
+
             crud.create(tmp);
-            labelMessage.setText("Planet with ID "+ tmp.getId() +" created successfully!");
-            
+            labelMessage.setText("Planet with ID " + tmp.getId() + " created successfully!");
+
         } catch (NumberFormatException ex) {
             labelMessage.setText("Error: Invalid number format in one of the fields.");
         } catch (Exception ex) {
             labelMessage.setText("Error: " + ex.getMessage());
         }
     }
-    
 
-    
-    private void showUpdateWindow(int id) throws Exception{
-        Planet tmp = crud.read(id); 
+    private void showUpdateWindow(int id) throws Exception {
+        Planet tmp = crud.read(id);
         if (tmp == null) {
             labelMessage.setText("Planet with ID " + id + " not found.");
             return;
         }
-    
+
         try {
-            
-    
-            
             String name = JOptionPane.showInputDialog(this, "Inserir nome:", tmp.getName());
             if (name != null && !name.isEmpty()) {
                 tmp.setName(name);
             }
-    
-            
+
             String dataRelease = JOptionPane.showInputDialog(this, "Inserir data (yyyy-mm-dd):");
             if (dataRelease != null && !dataRelease.isEmpty()) {
                 tmp.setDataRelase(dataRelease);
             }
-    
-            
+
             String host = JOptionPane.showInputDialog(this, "Inserir estrela hospedeira:");
             if (host != null && !host.isEmpty()) {
                 tmp.setHost(host);
             }
-    
-            
+
             String numStarsStr = JOptionPane.showInputDialog(this, "Inserir número de estrelas:", tmp.getNumStars());
             if (numStarsStr != null && !numStarsStr.isEmpty()) {
                 tmp.setNumStars(Integer.parseInt(numStarsStr));
             }
-    
-            
+
             String numPlanetsStr = JOptionPane.showInputDialog(this, "Inserir número de planetas:", tmp.getNumPlanets());
             if (numPlanetsStr != null && !numPlanetsStr.isEmpty()) {
                 tmp.setNumPlanets(Integer.parseInt(numPlanetsStr));
             }
-    
-            
+
             String discoveryMethod = JOptionPane.showInputDialog(this, "Inserir método de descoberta:");
             if (discoveryMethod != null && !discoveryMethod.isEmpty()) {
                 tmp.setDiscoveryMethod(discoveryMethod);
             }
-    
-            
+
             String discoveryYearStr = JOptionPane.showInputDialog(this, "Inserir ano de descoberta:", tmp.getDiscoveryYear());
             if (discoveryYearStr != null && !discoveryYearStr.isEmpty()) {
                 tmp.setDiscoveryYear(Integer.parseInt(discoveryYearStr));
             }
-    
-            
+
             String discoveryFacility = JOptionPane.showInputDialog(this, "Inserir local de descoberta:", tmp.getDiscoveryFacility());
             if (discoveryFacility != null && !discoveryFacility.isEmpty()) {
                 tmp.setDiscoveryFacility(discoveryFacility);
             }
-    
-            
+
             String controvStr = JOptionPane.showInputDialog(this, "Inserir flag de controvérsia (true/false):", tmp.isControv());
             if (controvStr != null && !controvStr.isEmpty()) {
                 tmp.setControv(Boolean.parseBoolean(controvStr));
             }
-    
-            
+
             String massStr = JOptionPane.showInputDialog(this, "Inserir massa estelar:", tmp.getMass());
             if (massStr != null && !massStr.isEmpty()) {
                 tmp.setMass(Long.parseLong(massStr));
             }
-    
-            
+
             String tempStr = JOptionPane.showInputDialog(this, "Inserir temperatura estelar (ou -1 se desconhecida):", tmp.getstarTemperature());
             if (tempStr != null && !tempStr.isEmpty()) {
                 tmp.setstarTemperature(Double.parseDouble(tempStr));
             }
-    
-            
+
             String[] currentRatios = tmp.getMetalRatio();
             if (currentRatios == null || currentRatios.length < 2) {
-                currentRatios = new String[]{"", ""}; 
+                currentRatios = new String[]{"", ""};
             }
 
             
